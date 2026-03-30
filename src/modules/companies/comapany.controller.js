@@ -55,7 +55,7 @@ exports.createCompany = async (req, res) => {
 
 exports.getCompanies = async (req, res) => {
   try {
-    const companies = await Company.find().sort({ createdAt: -1 })
+    const companies = await Company.find({ isDeleted: false }).sort({ createdAt: -1 })
 
     return res.status(200).json({
       success: true,
@@ -123,7 +123,8 @@ exports.updateCompany = async (req, res) => {
       "description",
       "location",
       "website",
-      "metrics"
+      "metrics",
+      "status"
     ]
 
     const updates = {}

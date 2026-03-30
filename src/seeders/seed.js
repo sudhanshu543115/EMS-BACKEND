@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-const User = require('../models/user.model');
-const Role = require('../models/role.model');
+const User = require('../modules/auth/user.model');
+const Role = require('../modules/roles/role.model');
+const Company = require('../modules/companies/company.model');
 require('dotenv').config();
 
 const seedData = async () => {
@@ -9,9 +10,10 @@ const seedData = async () => {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Connected to MongoDB');
 
-    // Clear existing data (optional - remove if you want to keep existing data)
+    // Clear existing data
     await User.deleteMany({});
     await Role.deleteMany({});
+    await Company.deleteMany({});
     console.log('Cleared existing data');
 
     // Create roles
@@ -45,7 +47,7 @@ const seedData = async () => {
     const superadmin = {
       name: 'Super Admin',
       email: 'superadmin@ems.com',
-      password: 'admin123', // You should hash this in production
+      password: 'admin123',
       role: 'super_admin',
       isActive: true
     };
@@ -87,6 +89,40 @@ const seedData = async () => {
 
     const createdUsers = await User.insertMany(sampleUsers);
     console.log('Sample users created:', createdUsers.length);
+
+    // Create sample companies
+    const sampleCompanies = [
+      {
+        name: "Nexus Innovations",
+        industry: "Software & SaaS",
+        description: "Leading provider of enterprise cloud solutions and AI integration.",
+        location: { city: "San Francisco", state: "CA", country: "USA" },
+        website: "nexus-tech.com",
+        metrics: { staffCount: 1240, revenue: 12500000, projectsCount: 42 },
+        status: "active"
+      },
+      {
+        name: "Vertex Design Studio",
+        industry: "Marketing & Design",
+        description: "Award-winning digital agency focused on brand identity.",
+        location: { city: "London", state: "Greater London", country: "UK" },
+        website: "vertex.studio",
+        metrics: { staffCount: 85, revenue: 2100000, projectsCount: 89 },
+        status: "active"
+      },
+      {
+        name: "EcoEnergy Systems",
+        industry: "Renewable Energy",
+        description: "Sustainable solar and wind energy infrastructure.",
+        location: { city: "Austin", state: "Texas", country: "USA" },
+        website: "eco-energy.org",
+        metrics: { staffCount: 310, revenue: 18400000, projectsCount: 6 },
+        status: "active"
+      }
+    ];
+
+    const createdCompanies = await Company.insertMany(sampleCompanies);
+    console.log('Sample companies created:', createdCompanies.length);
 
     console.log('\n✅ Database seeded successfully!');
     console.log('\n📋 Login Credentials:');
