@@ -11,5 +11,3 @@ router.patch("/:id", auth, allow("super_admin", "hr"), controller.updateEmployee
 router.delete("/:id", auth, allow("super_admin"), controller.deleteEmployee);
 
 module.exports = router;
-
-
